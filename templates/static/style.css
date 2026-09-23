@@ -1,0 +1,132 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.chat-container {
+    width: 100%;
+    max-width: 600px;
+    height: 90vh;
+    background-color: #1e1e1e;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    overflow: hidden;
+}
+
+header {
+    background-color: #2c2c2c;
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #333;
+}
+
+header h1 {
+    color: #4caf50;
+    font-size: 1.5rem;
+}
+
+header p {
+    font-size: 0.9rem;
+    color: #aaa;
+}
+
+.chat-box {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.message {
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 15px;
+    line-height: 1.4;
+    animation: fadeIn 0.3s ease;
+}
+
+.user-message {
+    background-color: #4caf50;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+}
+
+.guss-message {
+    background-color: #333;
+    color: #e0e0e0;
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+}
+
+.input-area {
+    padding: 15px;
+    background-color: #2c2c2c;
+    display: flex;
+    gap: 10px;
+    border-top: 1px solid #333;
+}
+
+#user-input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 25px;
+    border: 1px solid #444;
+    background-color: #121212;
+    color: white;
+    outline: none;
+}
+
+#user-input:focus {
+    border-color: #4caf50;
+}
+
+#send-btn {
+    padding: 12px 20px;
+    border-radius: 25px;
+    border: none;
+    background-color: #4caf50;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+#send-btn:hover {
+    background-color: #45a049;
+}
+
+.loading {
+    text-align: center;
+    color: #aaa;
+    font-size: 0.9rem;
+    padding: 10px;
+    font-style: italic;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+    .chat-container {
+        height: 100vh;
+        border-radius: 0;
+    }
+}
