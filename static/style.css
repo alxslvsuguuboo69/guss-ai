@@ -138,4 +138,99 @@ body {
         padding: 0 15px;
     }
 }
-```
+/* =========================================
+   INDICADOR DE GUSS PENSANDO
+   ========================================= */
+
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px 20px 15px;
+    color: #c4b5fd;
+    font-size: 14px;
+}
+
+.stars-loader {
+    position: relative;
+    width: 32px;
+    height: 25px;
+}
+
+.star {
+    position: absolute;
+    font-size: 13px;
+    opacity: 0;
+    animation: starFloat 1.5s infinite ease-in-out;
+}
+
+.star-1 {
+    left: 0;
+    top: 8px;
+    animation-delay: 0s;
+}
+
+.star-2 {
+    left: 8px;
+    top: 0;
+    animation-delay: 0.2s;
+    font-size: 9px;
+}
+
+.star-3 {
+    left: 15px;
+    top: 7px;
+    animation-delay: 0.4s;
+    font-size: 17px;
+}
+
+.star-4 {
+    left: 23px;
+    top: 1px;
+    animation-delay: 0.6s;
+    font-size: 8px;
+}
+
+.star-5 {
+    left: 25px;
+    top: 15px;
+    animation-delay: 0.8s;
+    font-size: 11px;
+}
+
+@keyframes starFloat {
+    0% {
+        opacity: 0;
+        transform: scale(0.4) translateY(5px) rotate(0deg);
+    }
+
+    30% {
+        opacity: 1;
+        transform: scale(1) translateY(0) rotate(20deg);
+    }
+
+    60% {
+        opacity: 0.8;
+        transform: scale(1.15) translateY(-3px) rotate(45deg);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(0.4) translateY(-8px) rotate(70deg);
+    }
+}
+
+.loading-text {
+    animation: textGlow 1.5s infinite ease-in-out;
+}
+
+@keyframes textGlow {
+    0%, 100% {
+        opacity: 0.55;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
