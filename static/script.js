@@ -1,44 +1,36 @@
-```javascript
 console.log("GUSS AI: JavaScript cargado correctamente");
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function () {
 
     const chatBox = document.getElementById("chat-box");
     const userInput = document.getElementById("user-input");
     const sendBtn = document.getElementById("send-btn");
     const loadingIndicator = document.getElementById("loading");
 
-    console.log("Elementos encontrados:", {
-        chatBox: !!chatBox,
-        userInput: !!userInput,
-        sendBtn: !!sendBtn,
-        loading: !!loadingIndicator
-    });
-
-    if (!chatBox || !userInput || !sendBtn || !loadingIndicator) {
-        console.error("GUSS AI: No se encontraron los elementos del chat.");
-        return;
-    }
+    console.log("Chat encontrado:", !!chatBox);
+    console.log("Input encontrado:", !!userInput);
+    console.log("Botón encontrado:", !!sendBtn);
 
     async function sendMessage() {
 
         const message = userInput.value.trim();
 
-        if (!message) {
-            return;
-        }
+        if (!message) return;
 
-        console.log("Enviando mensaje:", message);
+        console.log("Enviando:", message);
 
-        addMessage(message, "user");
+        chatBox.innerHTML += `
+            <div class="message user-message">
+                ${message}
+            </div>
+        `;
 
         userInput.value = "";
-        sendBtn.disabled = true;
         loadingIndicator.style.display = "block";
 
         try {
 
-            console.log("Conectando con /chat...");
+            console.log("Llamando a /chat...");
 
             const response = await fetch("/chat", {
                 method: "POST",
@@ -50,82 +42,54 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
             });
 
-            console.log("Respuesta del servidor:", response.status);
+            console.log("Estado:", response.status);
 
             const data = await response.json();
 
-            console.log("Datos recibidos:", data);
+            console.log("Respuesta:", data);
 
             if (response.ok) {
 
-                addMessage(
-                    data.respuesta || "Guss no devolvió ninguna respuesta.",
-                    "guss"
-                );
+                chatBox.innerHTML += `
+                    <div class="message guss-message">
+                        ${data.respuesta}
+                    </div>
+                `;
 
             } else {
 
-                addMessage(
-                    "Error del servidor: " + (data.error || "Error desconocido"),
-                    "guss"
-                );
-
-                console.error("Error del servidor:", data);
-
+                chatBox.innerHTML += `
+                    <div class="message guss-message">
+                        Error: ${data.error}
+                    </div>
+                `;
             }
 
         } catch (error) {
 
-            console.error("Error de conexión:", error);
+            console.error("ERROR:", error);
 
-            addMessage(
-                "No pude conectarme con Guss. Revisa la consola.",
-                "guss"
-            );
+            chatBox.innerHTML += `
+                <div class="message guss-message">
+                    Error de conexión con el servidor.
+                </div>
+            `;
 
         } finally {
 
             loadingIndicator.style.display = "none";
-            sendBtn.disabled = false;
-            userInput.focus();
-
         }
     }
 
-    function addMessage(text, sender) {
+    sendBtn.addEventListener("click", sendMessage);
 
-        const messageDiv = document.createElement("div");
-
-        messageDiv.classList.add("message");
-
-        if (sender === "user") {
-            messageDiv.classList.add("user-message");
-        } else {
-            messageDiv.classList.add("guss-message");
-        }
-
-        messageDiv.textContent = text;
-
-        chatBox.appendChild(messageDiv);
-
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    sendBtn.addEventListener("click", () => {
-        console.log("Botón Enviar presionado");
-        sendMessage();
-    });
-
-    userInput.addEventListener("keydown", (event) => {
+    userInput.addEventListener("keydown", function (event) {
 
         if (event.key === "Enter") {
             event.preventDefault();
-            console.log("Enter presionado");
             sendMessage();
         }
 
     });
 
-    console.log("GUSS AI: Chat inicializado correctamente");
 });
-```
