@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guss AI</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="chat-container">
+        <header>
+            <h1> Guss AI</h1>
+            <p>Tu asistente inteligente</p>
+        </header>
+        
+        <div id="chat-box" class="chat-box">
+            <div class="message guss-message">
+                ¡Hola! Soy Guss. ¿En qué te puedo ayudar hoy?
+            </div>
+        </div>
+        
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Escribe tu mensaje aquí..." autocomplete="off">
+            <button id="send-btn">Enviar</button>
+        </div>
+        <p id="loading" class="loading" style="display: none;">Guss está escribiendo...</p>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
