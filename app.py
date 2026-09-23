@@ -2,21 +2,21 @@ import os
 import urllib.request
 import urllib.error
 import json
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_from_directory
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', static_url_path='/static')
 
 # Configuración de seguridad
 API_KEY = os.environ.get("OPENROUTER_API_KEY")
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
 MODELO = "openrouter/free"
 
-# Esta ruta muestra la página web completa
+# Ruta principal - muestra la página web
 @app.route("/")
 def home():
     return render_template("index.html")
 
-# Esta ruta recibe los mensajes del chat
+# Ruta para el chat - recibe y responde mensajes
 @app.route("/chat", methods=["POST"])
 def chat():
     datos_web = request.json
