@@ -1,5 +1,28 @@
-```css
-* {
+/* =========================================
+   GUSS AI - ESTILOS
+   ========================================= */
+
+:root {
+    --bg: #111827;
+    --surface: #1f2937;
+    --surface-2: #374151;
+    --border: #374151;
+    --border-input: #4b5563;
+    --text: #ffffff;
+    --text-muted: #9ca3af;
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --focus: #60a5fa;
+    --thinking: #c4b5fd;
+    --danger: #f87171;
+    --radius: 14px;
+}
+
+/* ---------- Base ---------- */
+
+*,
+*::before,
+*::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -7,43 +30,94 @@
 
 body {
     min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: Arial, sans-serif;
-    background: #111827;
-    color: #ffffff;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
 }
+
+button,
+textarea {
+    font: inherit;
+}
+
+:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+}
+
+/* ---------- Contenedor ---------- */
 
 .chat-container {
     width: 90%;
     max-width: 700px;
     height: 85vh;
+    height: 85dvh;
     min-height: 500px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    background: #1f2937;
-    border: 1px solid #374151;
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 18px;
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
 }
 
+/* ---------- Cabecera ---------- */
+
 .chat-header {
-    padding: 25px;
-    text-align: center;
-    background: #111827;
-    border-bottom: 1px solid #374151;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 18px 22px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
 }
 
 .chat-header h1 {
-    font-size: 30px;
-    margin-bottom: 6px;
+    font-size: 26px;
+    line-height: 1.2;
+    margin-bottom: 2px;
 }
 
 .chat-header p {
-    color: #9ca3af;
+    font-size: 14px;
+    color: var(--text-muted);
 }
+
+.new-chat-btn {
+    flex-shrink: 0;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: var(--text-muted);
+    background: transparent;
+    border: 1px solid var(--border-input);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.new-chat-btn:hover {
+    color: var(--text);
+    border-color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* ---------- Mensajes ---------- */
 
 .chat-box {
     flex: 1;
@@ -52,63 +126,107 @@ body {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-input) transparent;
 }
 
 .message {
     max-width: 80%;
     padding: 12px 16px;
-    border-radius: 14px;
-    line-height: 1.5;
-    word-wrap: break-word;
+    border-radius: var(--radius);
+    line-height: 1.55;
+    white-space: pre-wrap;        /* respeta saltos de línea */
+    overflow-wrap: anywhere;      /* evita desbordes con texto largo */
+    animation: messageIn 0.2s ease-out;
 }
 
 .guss-message {
     align-self: flex-start;
-    background: #374151;
+    background: var(--surface-2);
+    border-bottom-left-radius: 4px;
 }
 
 .user-message {
     align-self: flex-end;
-    background: #2563eb;
+    background: var(--accent);
+    border-bottom-right-radius: 4px;
 }
+
+.error-message {
+    background: rgba(248, 113, 113, 0.12);
+    border: 1px solid var(--danger);
+    color: var(--danger);
+}
+
+@keyframes messageIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---------- Entrada de texto ---------- */
 
 .input-area {
     display: flex;
+    align-items: flex-end;        /* el botón queda abajo si el textarea crece */
     gap: 10px;
     padding: 15px;
-    background: #111827;
-    border-top: 1px solid #374151;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
 }
 
 #user-input {
     flex: 1;
     min-width: 0;
-    padding: 13px 15px;
-    border: 1px solid #4b5563;
+    min-height: 48px;
+    max-height: 150px;
+    padding: 12px 15px;
+    resize: none;
+    line-height: 1.4;
+    font-size: 16px;              /* 16px evita el zoom automático en iOS */
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border-input);
     border-radius: 10px;
     outline: none;
-    background: #1f2937;
-    color: #ffffff;
-    font-size: 16px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+#user-input::placeholder {
+    color: var(--text-muted);
 }
 
 #user-input:focus {
-    border-color: #60a5fa;
+    border-color: var(--focus);
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
 }
 
 #send-btn {
+    height: 48px;
     padding: 0 20px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+    background: var(--accent);
     border: none;
     border-radius: 10px;
-    background: #2563eb;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
     cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
 }
 
-#send-btn:hover {
-    background: #1d4ed8;
+#send-btn:hover:not(:disabled) {
+    background: var(--accent-hover);
+}
+
+#send-btn:active:not(:disabled) {
+    transform: scale(0.97);
 }
 
 #send-btn:disabled {
@@ -116,31 +234,7 @@ body {
     cursor: not-allowed;
 }
 
-.loading {
-    padding: 0 20px 12px;
-    color: #9ca3af;
-    text-align: center;
-}
-
-@media (max-width: 600px) {
-    .chat-container {
-        width: 100%;
-        height: 100vh;
-        min-height: 100vh;
-        border-radius: 0;
-    }
-
-    .message {
-        max-width: 90%;
-    }
-
-    #send-btn {
-        padding: 0 15px;
-    }
-}
-/* =========================================
-   INDICADOR DE GUSS PENSANDO
-   ========================================= */
+/* ---------- Indicador "Guss está pensando" ---------- */
 
 .loading {
     display: flex;
@@ -148,7 +242,7 @@ body {
     justify-content: center;
     gap: 10px;
     padding: 10px 20px 15px;
-    color: #c4b5fd;
+    color: var(--thinking);
     font-size: 14px;
 }
 
@@ -165,60 +259,17 @@ body {
     animation: starFloat 1.5s infinite ease-in-out;
 }
 
-.star-1 {
-    left: 0;
-    top: 8px;
-    animation-delay: 0s;
-}
-
-.star-2 {
-    left: 8px;
-    top: 0;
-    animation-delay: 0.2s;
-    font-size: 9px;
-}
-
-.star-3 {
-    left: 15px;
-    top: 7px;
-    animation-delay: 0.4s;
-    font-size: 17px;
-}
-
-.star-4 {
-    left: 23px;
-    top: 1px;
-    animation-delay: 0.6s;
-    font-size: 8px;
-}
-
-.star-5 {
-    left: 25px;
-    top: 15px;
-    animation-delay: 0.8s;
-    font-size: 11px;
-}
+.star-1 { left: 0;    top: 8px;  animation-delay: 0s; }
+.star-2 { left: 8px;  top: 0;    animation-delay: 0.2s; font-size: 9px; }
+.star-3 { left: 15px; top: 7px;  animation-delay: 0.4s; font-size: 17px; }
+.star-4 { left: 23px; top: 1px;  animation-delay: 0.6s; font-size: 8px; }
+.star-5 { left: 25px; top: 15px; animation-delay: 0.8s; font-size: 11px; }
 
 @keyframes starFloat {
-    0% {
-        opacity: 0;
-        transform: scale(0.4) translateY(5px) rotate(0deg);
-    }
-
-    30% {
-        opacity: 1;
-        transform: scale(1) translateY(0) rotate(20deg);
-    }
-
-    60% {
-        opacity: 0.8;
-        transform: scale(1.15) translateY(-3px) rotate(45deg);
-    }
-
-    100% {
-        opacity: 0;
-        transform: scale(0.4) translateY(-8px) rotate(70deg);
-    }
+    0%   { opacity: 0;   transform: scale(0.4)  translateY(5px)  rotate(0deg); }
+    30%  { opacity: 1;   transform: scale(1)    translateY(0)    rotate(20deg); }
+    60%  { opacity: 0.8; transform: scale(1.15) translateY(-3px) rotate(45deg); }
+    100% { opacity: 0;   transform: scale(0.4)  translateY(-8px) rotate(70deg); }
 }
 
 .loading-text {
@@ -226,11 +277,131 @@ body {
 }
 
 @keyframes textGlow {
-    0%, 100% {
-        opacity: 0.55;
+    0%, 100% { opacity: 0.55; }
+    50%      { opacity: 1; }
+}
+
+/* ---------- Móvil ---------- */
+
+@media (max-width: 600px) {
+    .chat-container {
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        min-height: 0;
+        border: none;
+        border-radius: 0;
     }
 
-    50% {
-        opacity: 1;
+    .chat-header {
+        padding: 14px 16px;
     }
+
+    .chat-header h1 {
+        font-size: 22px;
+    }
+
+    .chat-box {
+        padding: 14px;
+    }
+
+    .message {
+        max-width: 90%;
+    }
+
+    #send-btn {
+        padding: 0 15px;
+    }
+}
+
+/* ---------- Accesibilidad: menos movimiento ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .star {
+        opacity: 1;               /* el loader queda visible, pero quieto */
+    }
+}
+
+/* ---------- Burbuja "Guss está pensando" (dentro del chat) ---------- */
+
+.thinking-message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--thinking);
+}
+
+.thinking-message .stars-loader {
+    flex-shrink: 0;
+}
+
+.star {
+    color: var(--thinking);
+    text-shadow: 0 0 8px currentColor;   /* brillo de las estrellas */
+}
+/* Agrega esto AL FINAL de tu static/style.css (no reemplaza tus estilos). */
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+}
+
+/* Respeta saltos de línea y evita que el texto largo se desborde */
+.message {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.error-message {
+    border: 1px solid #e5484d;
+    color: #e5484d;
+}
+
+.chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.new-chat-btn {
+    padding: 8px 12px;
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+    background: transparent;
+    color: inherit;
+    border: 1px solid currentColor;
+    border-radius: 8px;
+    opacity: 0.8;
+}
+
+.new-chat-btn:hover { opacity: 1; }
+
+.input-area textarea {
+    flex: 1;
+    max-height: 150px;
+    resize: none;
+    font: inherit;
+    line-height: 1.4;
+    /* Copia aquí el padding, borde y colores que tenía tu <input> */
+}
+
+#send-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
