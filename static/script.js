@@ -1,95 +1,123 @@
-console.log("GUSS AI: JavaScript cargado correctamente");
+"use strict";
 
-document.addEventListener("DOMContentLoaded", function () {
-
+(() => {
     const chatBox = document.getElementById("chat-box");
-    const userInput = document.getElementById("user-input");
+    const input = document.getElementById("user-input");
     const sendBtn = document.getElementById("send-btn");
-    const loadingIndicator = document.getElementById("loading");
+    const newChatBtn = document.getElementById("new-chat-btn");
 
-    console.log("Chat encontrado:", !!chatBox);
-    console.log("Input encontrado:", !!userInput);
-    console.log("Botón encontrado:", !!sendBtn);
+    // Cinco estrellas; el CSS (.star-1 ... .star-5) posiciona y anima cada una.
+    const STARS_HTML = ["✦", "✧", "✦", "✧", "✦"]
+        .map((s, i) => `<span class="star star-${i + 1}">${s}</span>`)
+        .join("");
 
-    async function sendMessage() {
+    let busy = false;
 
-        const message = userInput.value.trim();
+    function scrollToBottom() {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
 
-        if (!message) return;
+    function addMessage(text, classes) {
+        const el = document.createElement("div");
+        el.className = `message ${classes}`;
+        el.textContent = text; // textContent evita inyección de HTML (XSS)
+        chatBox.appendChild(el);
+        scrollToBottom();
+    }
 
-        console.log("Enviando:", message);
+    /** Burbuja de Guss con estrellas animadas dentro del chat. */
+    function showThinking() {
+        const el = document.createElement("div");
+        el.className = "message guss-message thinking-message";
+        el.setAttribute("role", "status");
+        el.innerHTML =
+            `<span class="stars-loader" aria-hidden="true">${STARS_HTML}</span>` +
+            `<span class="loading-text">Guss está pensando...</span>`;
+        chatBox.appendChild(el);
+        scrollToBottom();
+        return el;
+    }
 
-        chatBox.innerHTML += `
-            <div class="message user-message">
-                ${message}
-            </div>
-        `;
+    async function api(url, options = {}) {
+        let res;
+        try {
+            res = await fetch(url, {
+                headers: { "Content-Type": "application/json" },
+                ...options,
+            });
+        } catch {
+            throw new Error("No se pudo conectar con el servidor.");
+        }
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || `Error ${res.status}`);
+        return data;
+    }
 
-        userInput.value = "";
-        loadingIndicator.style.display = "block";
+    function autosize() {
+        input.style.height = "auto";
+        input.style.height = `${Math.min(input.scrollHeight, 150)}px`;
+    }
+
+    async function send() {
+        const text = input.value.trim();
+        if (!text || busy) return;
+
+        busy = true;
+        sendBtn.disabled = true;
+        addMessage(text, "user-message");
+        input.value = "";
+        autosize();
+
+        const thinking = showThinking();
 
         try {
-
-            console.log("Llamando a /chat...");
-
-            const response = await fetch("/chat", {
+            const data = await api("/chat", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    mensaje: message
-                })
+                body: JSON.stringify({ mensaje: text }),
             });
-
-            console.log("Estado:", response.status);
-
-            const data = await response.json();
-
-            console.log("Respuesta:", data);
-
-            if (response.ok) {
-
-                chatBox.innerHTML += `
-                    <div class="message guss-message">
-                        ${data.respuesta}
-                    </div>
-                `;
-
-            } else {
-
-                chatBox.innerHTML += `
-                    <div class="message guss-message">
-                        Error: ${data.error}
-                    </div>
-                `;
-            }
-
-        } catch (error) {
-
-            console.error("ERROR:", error);
-
-            chatBox.innerHTML += `
-                <div class="message guss-message">
-                    Error de conexión con el servidor.
-                </div>
-            `;
-
+            thinking.remove();
+            addMessage(data.respuesta, "guss-message");
+        } catch (err) {
+            thinking.remove();
+            addMessage(err.message, "guss-message error-message");
         } finally {
-
-            loadingIndicator.style.display = "none";
+            busy = false;
+            sendBtn.disabled = false;
+            input.focus();
         }
     }
 
-    sendBtn.addEventListener("click", sendMessage);
-
-    userInput.addEventListener("keydown", function (event) {
-
-        if (event.key === "Enter") {
-            event.preventDefault();
-            sendMessage();
+    async function loadHistory() {
+        try {
+            const { mensajes } = await api("/history");
+            mensajes.forEach((m) =>
+                addMessage(m.content, m.role === "user" ? "user-message" : "guss-message")
+            );
+        } catch {
+            /* sin historial: se queda solo el saludo */
         }
+    }
 
+    async function newChat() {
+        if (busy || !confirm("¿Borrar la conversación y empezar de nuevo?")) return;
+        try {
+            await api("/reset", { method: "POST" });
+            while (chatBox.children.length > 1) chatBox.lastChild.remove(); // deja el saludo
+        } catch (err) {
+            addMessage(err.message, "guss-message error-message");
+        }
+    }
+
+    sendBtn.addEventListener("click", send);
+    newChatBtn.addEventListener("click", newChat);
+    input.addEventListener("input", autosize);
+    input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey && !e.isComposing) {
+            e.preventDefault();
+            send();
+        }
     });
 
-});
+    loadHistory();
+    input.focus();
+})();
