@@ -1,65 +1,47 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <meta name="description" content="Guss AI, tu asistente inteligente.">
     <title>Guss AI</title>
 
-    <!-- CSS servido por Flask -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </head>
 
 <body>
-
     <div class="chat-container">
 
         <header class="chat-header">
-            <h1>Guss AI</h1>
-            <p>Tu asistente inteligente</p>
+            <div>
+                <h1>Guss AI</h1>
+                <p>Tu asistente inteligente</p>
+            </div>
+            <button type="button" id="new-chat-btn" class="new-chat-btn">
+                Nueva conversación
+            </button>
         </header>
 
-        <main id="chat-box" class="chat-box">
-
+        <main id="chat-box" class="chat-box" aria-live="polite" aria-label="Conversación">
             <div class="message guss-message">
                 ¡Hola! Soy Guss. ¿En qué te puedo ayudar hoy?
             </div>
-
         </main>
 
+
         <div class="input-area">
-
-            <input
-                type="text"
+            <label for="user-input" class="sr-only">Mensaje</label>
+            <textarea
                 id="user-input"
-                placeholder="Escribe tu mensaje aquí..."
+                rows="1"
+                maxlength="4000"
+                placeholder="Escribe tu mensaje aquí... (Enter envía, Shift+Enter salta de línea)"
                 autocomplete="off"
-            >
-
-            <button type="button" id="send-btn">
-                Enviar
-            </button>
-
+            ></textarea>
+            <button type="button" id="send-btn">Enviar</button>
         </div>
 
-        <div id="loading" class="loading" style="display: none;">
-    <div class="stars-loader">
-        <span class="star star-1">✦</span>
-        <span class="star star-2">✧</span>
-        <span class="star star-3">✦</span>
-        <span class="star star-4">✧</span>
-        <span class="star star-5">✦</span>
     </div>
-
-    <span class="loading-text">Guss está pensando...</span>
-</div>
-
-    </div>
-
-    <!-- JavaScript servido por Flask -->
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
-
 </body>
 </html>
-```
