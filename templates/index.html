@@ -1,47 +1,18 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Guss AI, tu asistente inteligente.">
-    <title>Guss AI</title>
+{% extends "base.html" %}
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
-</head>
+{% block content %}
+<div class="container">
+    <header>
+        <h1>Guss AI</h1>
+        <p class="subtitle">Asistente de inteligencia artificial</p>
+    </header>
 
-<body>
-    <div class="chat-container">
-
-        <header class="chat-header">
-            <div>
-                <h1>Guss AI</h1>
-                <p>Tu asistente inteligente</p>
-            </div>
-            <button type="button" id="new-chat-btn" class="new-chat-btn">
-                Nueva conversación
-            </button>
-        </header>
-
-        <main id="chat-box" class="chat-box" aria-live="polite" aria-label="Conversación">
-            <div class="message guss-message">
-                ¡Hola! Soy Guss. ¿En qué te puedo ayudar hoy?
-            </div>
-        </main>
-
-
-        <div class="input-area">
-            <label for="user-input" class="sr-only">Mensaje</label>
-            <textarea
-                id="user-input"
-                rows="1"
-                maxlength="4000"
-                placeholder="Escribe tu mensaje aquí... (Enter envía, Shift+Enter salta de línea)"
-                autocomplete="off"
-            ></textarea>
-            <button type="button" id="send-btn">Enviar</button>
-        </div>
-
+    <div id="chat-container">
+        <div id="messages"></div>
+        <form id="chat-form">
+            <input type="text" id="user-input" placeholder="Escribe tu mensaje..." autocomplete="off" required>
+            <button type="submit">Enviar</button>
+        </form>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}
