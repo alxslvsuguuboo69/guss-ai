@@ -1,5 +1,5 @@
-from flask import Blueprint, request, jsonify, render_template
-from app.services.llm import chat_completion
+from flask import Blueprint, render_template, request, jsonify
+from app.services.openrouter import OpenRouterService
 
 chat_bp = Blueprint("chat", __name__)
 
@@ -9,19 +9,14 @@ def index():
 
 @chat_bp.route("/api/chat", methods=["POST"])
 def chat():
-    data = request.get_json(silent=True) or {}
-    user_message = data.get("message", "").strip()
+    data = request.get_json() or {}
+    messages = data.get("messages", [])
 
-    if not user_message:
-        return jsonify({"error": "El mensaje no puede estar vacío"}), 400
-
-    messages = [
-        {"role": "system", "content": "Eres Guss AI, un asistente útil, claro y amable."},
-        {"role": "user", "content": user_message},
-    ]
+    if not messages:
+        return jsonify({"error": "No se proporcionaron mensajes."}), 400
 
     try:
-        reply = chat_completion(messages)
-        return jsonify({"reply": reply})
+        reply = OpenRouterService.send_chat_completion(messages)
+        return jsonify({"response": reply})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
