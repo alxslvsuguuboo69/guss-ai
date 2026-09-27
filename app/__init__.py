@@ -3,13 +3,14 @@ from flask import Flask
 from app.config import Config
 
 def create_app():
-    # Se define la ruta base de la carpeta 'app'
-    base_dir = os.path.abspath(os.path.dirname(__file__))
+    # Obtiene la ruta absoluta de la carpeta raíz de la aplicación ('app')
+    app_dir = os.path.dirname(os.path.abspath(__file__))
 
     app = Flask(
         __name__,
-        template_folder=os.path.join(base_dir, 'templates'),
-        static_folder=os.path.join(base_dir, 'static')
+        template_folder=os.path.join(app_dir, 'templates'),
+        static_folder=os.path.join(app_dir, 'static'),
+        static_url_path='/static'
     )
 
     app.config.from_object(Config)
