@@ -2,14 +2,18 @@ import os
 from flask import Flask
 from app.config import Config
 
+
 def create_app():
-    # Obtiene la ruta absoluta de la carpeta raíz de la aplicación ('app')
+    # Carpeta donde está este archivo: guss-ai/app
     app_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Carpeta raíz del proyecto: guss-ai
+    project_dir = os.path.dirname(app_dir)
 
     app = Flask(
         __name__,
         template_folder=os.path.join(app_dir, 'templates'),
-        static_folder=os.path.join(app_dir, 'static'),
+        static_folder=os.path.join(project_dir, 'static'),
         static_url_path='/static'
     )
 
