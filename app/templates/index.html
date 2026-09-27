@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guss AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>Guss AI</h1>
+        </header>
+
+        <main class="chat-container" id="chat-container">
+            <div class="message assistant-message">
+                <div class="message-content">¡Hola! Soy Guss AI. ¿En qué puedo ayudarte hoy?</div>
+            </div>
+        </main>
+
+        <footer class="input-container">
+            <form id="chat-form">
+                <input type="text" id="user-input" placeholder="Escribe tu mensaje..." autocomplete="off" required>
+                <button type="submit" id="send-btn">Enviar</button>
+            </form>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
